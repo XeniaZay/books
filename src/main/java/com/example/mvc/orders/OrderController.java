@@ -1,5 +1,6 @@
 package com.example.mvc.orders;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ class OrderController {
     }
 
     @PostMapping
-    ResponseEntity<OrderResponse> create(@RequestBody OrderRequest request) {
+    ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest request) {
         Order order = service.create(request.productId(), request.quantity());
 
         OrderResponse response = new OrderResponse(
