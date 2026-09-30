@@ -1,6 +1,12 @@
 spring:
   application:
     name: api
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 10MB
+      file-size-threshold: 1MB
 
 logging:
   level:
