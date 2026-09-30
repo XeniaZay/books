@@ -143,6 +143,13 @@ public class GlobalExceptionHandler {
     ProblemDetail handleAll(Exception ex,
                             HttpServletRequest request) {
 
+        if (ex instanceof org.springframework.web.ErrorResponse errorResponse) {
+            try {
+                throw (Throwable) errorResponse;
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        }
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Unexpected error occurred"
