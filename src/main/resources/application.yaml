@@ -7,6 +7,16 @@ spring:
       max-file-size: 5MB
       max-request-size: 10MB
       file-size-threshold: 1MB
+  mvc:
+    async:
+      request-timeout: 10000
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 20
+        queue-capacity: 100
+        thread-name-prefix: mvc-async-
 
 logging:
   level:
@@ -17,7 +27,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: loggers,env,health,info,metrics,prometheus
+        include: loggers,env,health,info,metrics,prometheus,mappings
 
   endpoint:
     health:

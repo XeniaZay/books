@@ -2,10 +2,13 @@ package com.example.mvc.common;
 
 import com.example.mvc.currentuser.CurrentUserArgumentResolver;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.time.Duration;
 import java.util.List;
 
 @Configuration
@@ -13,11 +16,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final AccessLogInterceptor accessLogInterceptor;
     private final CurrentUserArgumentResolver currentUserArgumentResolver;
+    private final AsyncTaskExecutor asyncTaskExecutor;
 
     public WebMvcConfig(AccessLogInterceptor accessLogInterceptor,
-                        CurrentUserArgumentResolver currentUserArgumentResolver) {
+                        CurrentUserArgumentResolver currentUserArgumentResolver,
+                        AsyncTaskExecutor asyncTaskExecutor) {
         this.accessLogInterceptor = accessLogInterceptor;
         this.currentUserArgumentResolver = currentUserArgumentResolver;
+        this.asyncTaskExecutor = asyncTaskExecutor;
     }
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -30,4 +36,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(currentUserArgumentResolver);
     }
+
+    @Override
+    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+        configurer.setTaskExecutor(asyncTaskExecutor);
+        configurer.setDefaultTimeout(Duration.ofSeconds(10).toMillis());
+    }
+
 }
